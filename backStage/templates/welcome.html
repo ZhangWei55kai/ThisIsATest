@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="../static/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>我的桌面</title>
+</head>
+<body>
+<div class="page-container">
+	<p class="f-20 text-success">欢迎使用接口测试平台 <span class="f-14">v3.0</span>！</p>
+	<p>所属项目：下拉框 </p>
+	<p>所属环境：测试环境，预生产环境，正式环境</p>
+	<table class="table table-border table-bordered table-bg">
+		<thead>
+			<tr>
+				<th colspan="7" scope="col">信息统计</th>
+			</tr>
+			<tr class="text-c">
+				<th>所属项目</th>
+				<th>API总数</th>
+				<th>失败数</th>
+				<th>成功数</th>
+				<th>失败详情</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="text-c">
+                {% for i in context.api %}
+				<td>{{i}}</td>
+                {%empty%}
+                {%endfor%}
+			</tr>
+			<tr class="text-c">
+				<td>总数</td>
+				<td>92</td>
+				<td>9</td>
+				<td>0</td>
+				<td>8</td>
+			</tr>
+			<tr class="text-c">
+				<td>今日</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+			<tr class="text-c">
+				<td>昨日</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+			<tr class="text-c">
+				<td>本周</td>
+				<td>2</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+			<tr class="text-c">
+				<td>本月</td>
+				<td>2</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="container" style="height: 500px; width:80%; margin-left:10%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+</div>
+<footer class="footer mt-20">
+	<div class="container">
+		<p>感谢jQuery、layer、laypage、Validform、UEditor、My97DatePicker、iconfont、Datatables、WebUploaded、icheck、highcharts、bootstrap-Switch<br>
+			Copyright &copy;2015-2017 H-ui.admin v3.0 All Rights Reserved.<br>
+			本后台系统由<a href="http://www.h-ui.net/" target="_blank" title="H-ui前端框架">H-ui前端框架</a>提供前端技术支持</p>
+	</div>
+</footer>
+<script type="text/javascript" src="../static/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="../static/h-ui/js/H-ui.min.js"></script> 
+<script type="text/javascript" src="../static/pubjs/csrftoken.js"></script>
+<!--此乃百度统计代码，请自行删除-->
+<script>
+
+
+var _hmt = _hmt || [];
+(function() {
+	var date = []
+  	var success=[]
+  	var failed=[]
+	alert('hello')
+  	ssajax.ajax({
+  		"type":"GET",
+  		"url":"/viewDataLog",
+  		async: false,
+  		"success":function(data){
+  			console.log(typeof(data))
+  			for (o in data){
+  				console.log(o)
+  				date.push(o)
+  				success.push(data[o][0])
+  				failed.push(data[o][1])
+  			}
+  			}
+  		
+  	  })	
+  	console.log(success,failed,)
+	var dom = document.getElementById("container");
+	var myChart = echarts.init(dom);
+	var app = {};
+	option = null;
+
+
+
+	option = {
+	    title: {
+	        text: '测试报告'
+	    },
+	    tooltip: {
+	        trigger: 'axis'
+	    },
+	    legend: {
+	        data:['测试失败', '测试通过']
+	    },
+	    grid: {
+	        left: '3%',
+	        right: '4%',
+	        bottom: '3%',
+	        containLabel: true
+	    },
+	    toolbox: {
+	        feature: {
+	            saveAsImage: {}
+	        }
+	    },
+	    xAxis: {
+	        type: 'category',
+	        data:date
+	        // data: ['周一', '周二', '周三','周四', '周五', '周六', '周日']
+	    },
+	    yAxis: {
+	        type: 'value'
+	    },
+	    series: [
+	        {
+	            name:'测试失败',
+	            type:'line',
+	            step: 'start',
+	            data:failed
+	            // data:[11, 132, 101, 134, 90, 230, 210]
+	        },
+	        {
+	            name:'测试通过',
+	            type:'line',
+	            step: 'middle',
+	            data:success
+	            // data:[220, 282, 201, 234, 290, 430, 410]
+	        },
+	    ]
+	};
+	;
+	if (option && typeof option === "object") {
+	    myChart.setOption(option, true);
+	}
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?080836300300be57b7f34f4b3e97d911";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+})();
+
+       </script>
+</body>
+</html>

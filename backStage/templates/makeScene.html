@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>组合场景</title>
+<link rel="stylesheet" type="text/css" href="../static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="../static/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../static/h-ui.admin/css/style.css" />
+<style type="text/css">
+	*{margin:0;padding:0;font-family: "microsoft yahei"}
+	.head{width:100%;height: 50px;}
+	.foot{width: 1300px;height: 100%;margin:0 auto;}
+	.left{width:50%;height: 700px;float: left;}
+	.right{width: 50%;height: 700px;float: left;}
+	.title{width: 100%;height: 40px;}
+	.label_1{width: 100%;height: 100%;}
+	.label_1 li{list-style: none;	width:100px;height: 50px;border: 1px red solid;float: left;margin-left:21px;margin-top:20px;}
+	.title-api{width: 100%;height: 50px;line-height: 50px;background-color: rgb(245,250,254);}
+	.apilist{width: 100%;height: 100%;margin-top: 9px;}
+	.apicheck{width: 30px;height: 30px;border: 1px gray solid;float: left;border-right: none;}
+	.apiname{width: 500px;height: 30px;float: left;border: 1px gray solid;float: left;    font-size: 15px;line-height: 32px;padding-left: 20px;}
+	.btn{display: block;float: right;width: 87px;height: 42px;text-decoration: none;background-color:rgb(90,152,222);line-height: 42px;text-align: center;color:white;border-radius: 10px;margin-top: 3px;}
+	.check{vertical-align:middle; margin-left: 8px ;height:30px; padding:0;}
+	.layer{width:500px;height:300px;border:1px solid gray;position:absolute;top:50%;left:50%;
+		margin-top: -150px;margin-left: -250px;background-color:white;}
+	.close{position:absolute;right:1px;cursor:pointer;}
+	.btn-title{margin:10px auto;}
+	.sbt{width:75px;height:30px;position:absolute;right:1px;bottom:1px;background-color:rgb(90,152,222);
+	color:white;margin-left:3px;line-height:30px;border-radius:5px;cursor:pointer;}
+	.outer{width:100%;height: 100%;background-color: rgb(153,153,153);position: absolute;opacity: 0.6} 
+
+
+</style>
+</head>
+<body>
+<div class="head">
+	<div class="row cl" style='float:left;width: 400px;float:left;'>
+			<label class="form-label col-xs-9 col-sm-8" style="float: left;display: block;width: 150px;line-height: 30px"><span class="c-red">*</span>所属项目：</label>
+				<div class="formControls col-xs-5 col-sm-5" style="float: left;width: 200px;margin-left: -40px;"> <span class="select-box">
+				<select class="select" size="1" name="city" id="ProjectName">
+					<option value="" ></option>
+					{%for i in project%}
+					<option value="{{i.pk}}" {% ifequal i.pk proId %}selected{% endifequal %}>{{i.ProjectName}}</option>
+					{%empty%}
+					{%endfor%}
+				</select>
+				</span> </div>
+			</div> 
+</div>
+<div class="foot">
+
+	<div class='left' >
+		<div class="title">
+			<p class="title-api">
+				<strong>场景列表</strong>
+			</p>
+		</div>
+		<ul class="label_1">
+		{%for i in sceneinfo%}
+			<li>{{i.sceneName}}</li>
+		{%empty%}
+		{%endfor%}
+		</ul>
+	</div>
+	<div class='right' >
+		<div class="title">
+			<p class="title-api">
+				<strong>接口列表</strong>
+				<a class="btn" href="javascript:;" id="sum">组合</a>
+			</p>
+			{%for i in api%}
+			<div class="apilist">
+				<p class="apicheck">
+					<input type="checkbox" class='check' name="checkbox" value="{{i.pk}}">
+				</p>
+				<p class="apiname">{{i.APIName}}</p>
+			</div>
+			{%empty%}
+			{%endfor%}
+		</ul>
+		</div>
+	</div>
+</div>
+<div class="outer" style="display: none;"></div>
+<div class="layer" style="display: none;">
+		<div class="close">
+			X
+		</div>
+			<p class="btn-title">シーンの名称:</p>
+			<input name="" type="text" id="sceneName"/>
+			<div class="row cl" style='float:left;width: 400px;float:left;'>
+			<label class="form-label col-xs-9 col-sm-8" style="float: left;display: block;width: 150px;line-height: 30px"><span class="c-red">*</span>所属项目：</label>
+				<div class="formControls col-xs-5 col-sm-5" style="float: left;width: 200px;margin-left: -40px;"> <span class="select-box">
+				<select class="select" size="1" name="city" id="checkName">
+					<option value="" selected></option>
+					{%for i in project%}
+					<option value="{{i.pk}}">{{i.ProjectName}}</option>
+					{%empty%}
+					{%endfor%}
+				</select>
+				</span> </div>
+			</div> 
+			<p class="sbt">
+				<b class="btn-1">提出する</b>
+				</p>
+	</div>
+</body>
+<script type="text/javascript" src="../static/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="../static/pubjs/csrftoken.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var checkvalue = new Array()
+		//打开弹框
+		$("#sum").click(function(event){
+			event.preventDefault();
+			$(".outer").css("display","block");
+			$(".layer").css("display","block");
+				
+
+		});
+		//关闭弹框
+		$(".close").click(function(){
+			checkvalue = [];
+			$(".outer").css("display","none");
+			$(".layer").css("display","none");
+		});
+		//点击提交按钮
+		$(".btn-1").click(function(){
+			var sceneName = $('#sceneName').val();
+			var projectName = $('#ProjectName').val();
+			var checkName = $('#checkName').val();
+			$(".check:checked" ).each(function(){
+			checkvalue.push($(this).val())});
+
+			if (checkvalue.length < 1 ){
+				alert('最少选择一个！！')
+			}
+			else if (sceneName == null){
+				alert('请输入名称')
+			}
+			else if(checkName == null){
+				alert('请选择产品类型')
+			}
+			else{
+				$(".outer").css("display","none");
+				$(".layer").css("display","none");
+				ssajax.ajax({
+				"type": 'POST',
+				"data":{'apiList[]':checkvalue,
+						'sceneName':sceneName,
+						'projectName':projectName},	
+				"url": '/makeScene/'+Math.random(),
+				success: function(data){
+					checkvalue = [];
+					if (data.code == 0 && checkName==projectName){
+						var oul = ''
+						oul+="<li>"+sceneName+"</li>";
+						console.log(oul);
+						$('.label_1').append(oul)
+					}
+					
+				}
+				});
+			}
+
+
+			});
+		});
+
+</script>
+</html>
+
